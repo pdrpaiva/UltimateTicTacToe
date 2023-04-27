@@ -23,14 +23,15 @@ dseg	segment para public 'data'
         Erro_Close      db      'Erro ao tentar fechar o ficheiro$'
 		Inicio			db 		'menu.TXT',0
         Tabuleiro       db      'jogo.TXT',0
+		Players		    db      'players.TXT',0
         HandleFich      dw      0
         car_fich        db      ?
 
 
 		Car				db	32	; Guarda um caracter do Ecran 
 		Cor				db	7	; Guarda os atributos de cor do caracter
-		POSy			db	3	; a linha pode ir de [1 .. 25]
-		POSx			db	3	; POSx pode ir [1..80]	
+		POSy			db	17	; a linha pode ir de [1 .. 25]
+		POSx			db	34	; POSx pode ir [1..80]	
 
 dseg	ends
 
@@ -221,10 +222,20 @@ Menu:
 	mov  ah, 07h 				
 	int  21h
 	cmp  al, '1' 				
-	je   Jogo				
+	je   Jogadores				
 	cmp  al, '2' 					
 	je   Sair 												
 	jmp Menu 		
+
+Jogadores:
+	call		apaga_ecran
+	goto_xy		0,0
+	lea			dx,Players
+	call		IMP_FICH
+	call 		AVATAR
+	;goto_xy		17,34
+
+	
 
 Jogo:
 	call		apaga_ecran
