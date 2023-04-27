@@ -163,7 +163,7 @@ LER_SETA:	call 	LE_TECLA
 			cmp		ah, 1
 			je		ESTEND
 			CMP 	AL, 27		; ESCAPE
-			JE		FIM
+			JE		Main		; alterei isto para quando clico no esc ir para o menu
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
