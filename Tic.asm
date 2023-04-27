@@ -74,7 +74,7 @@ IMP_FICH	PROC
 		;abre ficheiro
         mov     ah,3dh
         mov     al,0
-        ;lea     dx,Tabuleiro
+        ;lea     dx,Fich comentei isto para podermos importar o que queremos no codigo
         int     21h
         jc      erro_abrir
         mov     HandleFich,ax
@@ -235,16 +235,9 @@ Jogo:
 	goto_xy		0,22
 
 Sair:
-	call Termina
+	je fim
 
 Main	endp
-
-Termina proc
-	call		apaga_ecran
-	goto_xy 	0,0
-	mov			ah,4CH
-	INT			21H   	
-Termina endp
 
 Cseg	ends
 end	Main
