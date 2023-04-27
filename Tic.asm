@@ -3,7 +3,7 @@
 ;   
 ;	ANO LECTIVO 2022/2023
 ;--------------------------------------------------------------
-; Demostração da navegação do cursor do Ecran 
+; Demostraï¿½ï¿½o da navegaï¿½ï¿½o do cursor do Ecran 
 ;
 ;		arrow keys to move 
 ;		press ESC to exit
@@ -21,7 +21,8 @@ dseg	segment para public 'data'
         Erro_Open       db      'Erro ao tentar abrir o ficheiro$'
         Erro_Ler_Msg    db      'Erro ao tentar ler do ficheiro$'
         Erro_Close      db      'Erro ao tentar fechar o ficheiro$'
-        Fich         	db      'jogo.TXT',0
+		Inicio			db 		'menu.TXT',0
+        Tabuleiro       db      'jogo.TXT',0
         HandleFich      dw      0
         car_fich        db      ?
 
@@ -41,7 +42,7 @@ assume		cs:cseg, ds:dseg
 ;########################################################################
 goto_xy	macro		POSx,POSy
 		mov		ah,02h
-		mov		bh,0		; numero da página
+		mov		bh,0		; numero da pï¿½gina
 		mov		dl,POSx
 		mov		dh,POSy
 		int		10h
@@ -73,7 +74,7 @@ IMP_FICH	PROC
 		;abre ficheiro
         mov     ah,3dh
         mov     al,0
-        lea     dx,Fich
+        ;lea     dx,Tabuleiro
         int     21h
         jc      erro_abrir
         mov     HandleFich,ax
@@ -144,19 +145,19 @@ AVATAR	PROC
 			mov		ax,0B800h
 			mov		es,ax
 CICLO:			
-			goto_xy	POSx,POSy		; Vai para nova possição
+			goto_xy	POSx,POSy		; Vai para nova possiï¿½ï¿½o
 			mov 	ah, 08h
-			mov		bh,0			; numero da página
+			mov		bh,0			; numero da pï¿½gina
 			int		10h		
-			mov		Car, al			; Guarda o Caracter que está na posição do Cursor
-			mov		Cor, ah			; Guarda a cor que está na posição do Cursor
+			mov		Car, al			; Guarda o Caracter que estï¿½ na posiï¿½ï¿½o do Cursor
+			mov		Cor, ah			; Guarda a cor que estï¿½ na posiï¿½ï¿½o do Cursor
 		
-			goto_xy	78,0			; Mostra o caractr que estava na posição do AVATAR
-			mov		ah, 02h			; IMPRIME caracter da posição no canto
+			goto_xy	78,0			; Mostra o caractr que estava na posiï¿½ï¿½o do AVATAR
+			mov		ah, 02h			; IMPRIME caracter da posiï¿½ï¿½o no canto
 			mov		dl, Car	
 			int		21H			
 	
-			goto_xy	POSx,POSy	; Vai para posição do cursor
+			goto_xy	POSx,POSy	; Vai para posiï¿½ï¿½o do cursor
 		
 LER_SETA:	call 	LE_TECLA
 			cmp		ah, 1
@@ -165,7 +166,7 @@ LER_SETA:	call 	LE_TECLA
 			JE		FIM
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
-			cmp		CL, 32		; Só escreve se for espaço em branco
+			cmp		CL, 32		; Sï¿½ escreve se for espaï¿½o em branco
 			JNE 	LER_SETA
 			mov		ah, 02h		; coloca o caracter lido no ecra
 			mov		dl, al
@@ -201,24 +202,50 @@ fim:
 			RET
 AVATAR		endp
 
-
+;fim das macros
 ;########################################################################
+
 Main  proc
 		mov			ax, dseg
 		mov			ds,ax
 		
 		mov			ax,0B800h
 		mov			es,ax
-		
-		call		apaga_ecran
-		goto_xy		0,0
-		call		IMP_FICH
-		call 		AVATAR
-		goto_xy		0,22
-		
-		mov			ah,4CH
-		INT			21H
+
+Menu:
+	call	apaga_ecran
+	goto_xy		0,0
+	lea			dx,Inicio
+	call		IMP_FICH
+
+	mov  ah, 07h 				
+	int  21h
+	cmp  al, '1' 				
+	je   Jogo				
+	cmp  al, '2' 					
+	je   Sair 												
+	jmp Menu 		
+
+Jogo:
+	call		apaga_ecran
+	goto_xy		0,0
+	lea			dx,Tabuleiro
+	call		IMP_FICH
+	call 		AVATAR
+	goto_xy		0,22
+
+Sair:
+	call Termina
+
 Main	endp
+
+Termina proc
+	call		apaga_ecran
+	goto_xy 	0,0
+	mov			ah,4CH
+	INT			21H   	
+Termina endp
+
 Cseg	ends
 end	Main
 
