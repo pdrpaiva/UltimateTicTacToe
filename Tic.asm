@@ -235,9 +235,16 @@ Jogo:
 	goto_xy		0,22
 
 Sair:
-	je fim
+	call Termina
 
 Main	endp
+
+Termina proc
+	call		apaga_ecran
+	goto_xy 	0,0
+	mov			ah,4CH
+	INT			21H   	
+Termina endp
 
 Cseg	ends
 end	Main
