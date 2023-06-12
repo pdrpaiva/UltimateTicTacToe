@@ -28,13 +28,14 @@ dseg	segment para public 'data'
 
 		Car				db	32	; Guarda um caracter do Ecran 
 		Cor				db	7	; Guarda os atributos de cor do caracter
-		POSy			db	14	; a linha pode ir de [1 .. 25]
+		POSy			db	7	; a linha pode ir de [1 .. 25]
 		POSx			db	4	; POSx pode ir [1..80]	
 		POSya			db	4	; posicao anterior de y
 		POSxa			db	4	; posicao anterior de x
 
-		Jogador1 		db  "Pedro",'$' ; aqui vai ser a string inserida pelo utilizador
-		Jogador2 		db  "Tomas",'$'	; aqui vai ser a string inserida pelo utilizador
+		Jogador1 		db  "- Pedro",'$' ; aqui vai ser a string inserida pelo utilizador
+		Jogador2 		db  "- Tomas",'$'	; aqui vai ser a string inserida pelo utilizador
+		JogadorAtual    db 1 
 
 		array    		db  81 dup(?)   ; Array de 81 elementos
 		simbolo			db 'X', 'O'
@@ -179,6 +180,7 @@ CICLO:
 		
 
 LER_SETA:
+		
 		; Guarda a posicao antes de mudar de posicao
 		mov 	al, POSx
 		mov 	POSxa, al
@@ -192,21 +194,25 @@ LER_SETA:
 		je 		FIM
 		cmp 	al, 20h    ; ESPAÇO (32 em hexadecimal)
 		je 		PODE_ESCREVER
+		cmp 	al, 58h    ; X
+		je 		PODE_ESCREVER
+		cmp 	al, 4Fh    ; O 
+		je 		PODE_ESCREVER
 		cmp 	al, 0    ; Verifica as setas
 		je 		VERIFICAR_SETA
 		jmp 	LER_SETA
 
 PODE_ESCREVER:
-		goto_xy POSx, POSy  ; verifica se pode escrever o caracter no ecran
-		mov 	CL, Car
-		cmp 	CL, 20h    ; Só escreve se for espaço em branco
-		jne 	LER_SETA
-		mov 	ah, 02h    ; coloca o caracter lido no ecra
-		mov 	dl, al
-		int 	21H
+    goto_xy POSx, POSy  ; verifica se pode escrever o caractere no ecrã
+    mov 	CL, Car
+    cmp 	CL, 20h    ; Só escreve se for espaço em branco
+    jne 	LER_SETA
+    mov 	ah, 02h    ; coloca o caractere lido no ecrã
+    mov 	dl, JogadorAtual
+	
+    int 	21H
 
-		goto_xy POSx, POSy
-		jmp 	LER_SETA
+    jmp 	LER_SETA
 
 VERIFICAR_SETA:
 		cmp 	ah, 0    ; Verifica o segundo byte de ah para distinguir as setas
@@ -303,14 +309,65 @@ Main  proc
 
 		call		apaga_ecran
 
-		GOTO_XY		7,0
+		; Inicialização do gerador de números aleatórios
+		MOV AH, 00H  ; Configurar função AH=00H para inicializar o gerador de números aleatórios
+		INT 1AH      ; Chamar a interrupção para obter o contador de tempo atual em CX e DX
+
+		; Gerar número aleatório entre 0 e 1
+		MOV AX, CX   ; Mover o valor de CX para AX
+		MOV BX, DX   ; Mover o valor de DX para BX
+		XOR AX, BX   ; Executar a operação XOR entre AX e BX para obter um valor aleatório em AX
+
+		; Atribuir símbolos aos jogadores com base no valor aleatório
+		MOV BL, AL   ; Mover o valor aleatório para BL
+		AND BL, 0001H ; Máscara para manter apenas o bit menos significativo
+
+		GOTO_XY		3,1
 		MOSTRA 		Jogador1
-		GOTO_XY		7,1
+		GOTO_XY		3,2
 		MOSTRA 		Jogador2
+
+		;A JOGAR
+		GOTO_XY		10,4
+		MOV AX, 'X'  ; Armazenar 'X' em AX
+		CMP BL, 0
+		JE s_ajogar
+		MOV AX, 'O'  ; Se BL for diferente de 0, armazenar 'O' em AX
+		s_ajogar:
+		MOV DL, AL   ; Mover o símbolo para DL
+		MOV AH, 02H
+		INT 21H
+
+		MOV [JogadorAtual], AL ;guarda quem é que está a jogar
+		
+		;Jogador1
+		GOTO_XY		1,1
+		MOV AL, 'X'
+		CMP BL, 0
+		JE s_jogador1
+		MOV AL, 'O'
+		s_jogador1:
+		MOV DL, AL
+		MOV AH, 02H
+		INT 21H
+
+		;Jogador2
+		GOTO_XY		1,2
+		MOV AL, 'O'
+		CMP BL, 0
+		JE s_jogador2
+		MOV AL, 'X'
+		s_jogador2:
+		MOV DL, AL
+		MOV AH, 02H
+		INT 21H
+
 		goto_xy		0,0
 		call		IMP_FICH
 		call 		AVATAR
 		goto_xy		0,22
+
+		
 
 		mov			ah,4CH
 		INT			21H
