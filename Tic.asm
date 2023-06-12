@@ -153,76 +153,99 @@ AVATAR	PROC
 			mov		es,ax
 			
 CICLO:			
-			goto_xy	POSx,POSy		; Vai para nova possi��o
-			mov 	ah, 08h
-			mov		bh,0			; numero da p�gina
-			int		10h		
-			mov		Car, al			; Guarda o Caracter que est� na posi��o do Cursor
-			mov		Cor, ah			; Guarda a cor que est� na posi��o do Cursor
+		goto_xy	POSx,POSy		; Vai para nova possi��o
+		mov 	ah, 08h
+		mov		bh,0			; numero da p�gina
+		int		10h		
+		mov		Car, al			; Guarda o Caracter que est� na posi��o do Cursor
+		mov		Cor, ah			; Guarda a cor que est� na posi��o do Cursor
+	
+		goto_xy	78,0			; Mostra o caractr que estava na posi��o do AVATAR
+		mov		ah, 02h			; IMPRIME caracter da posi��o no canto
+		mov		dl, Car	
+		int		21H			
+
+		cmp		al, 177
+		je		PAREDE
+
+		cmp		al, 186
+		je		SALTA_X
+
+		cmp		al, 205
+		je		SALTA_Y
 		
-			goto_xy	78,0			; Mostra o caractr que estava na posi��o do AVATAR
-			mov		ah, 02h			; IMPRIME caracter da posi��o no canto
-			mov		dl, Car	
-			int		21H			
-
-			cmp		al, 177
-			je		PAREDE
-
-			cmp		al, 186
-			je		SALTA_X
-
-			cmp		al, 205
-			je		SALTA_Y
-			
-			goto_xy	POSx,POSy	; Vai para posi��o do cursor
+		goto_xy	POSx,POSy	; Vai para posi��o do cursor
 		
 
-LER_SETA:	
-			;Guarda a posicao antes de mudar de posicao
-			mov al, POSx
-			mov POSxa, al
-			mov al, POSy
-			mov POSya, al
+LER_SETA:
+		; Guarda a posicao antes de mudar de posicao
+		mov 	al, POSx
+		mov 	POSxa, al
+		mov 	al, POSy
+		mov 	POSya, al
 
-			call 	LE_TECLA
-			cmp		ah, 1
-			je		ESTEND
-			CMP 	AL, 27		; ESCAPE
-			JE		FIM
-			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
-			mov		CL, Car
-			cmp		CL, 32		; S� escreve se for espa�o em branco
-			JNE 	LER_SETA
-			mov		ah, 02h		; coloca o caracter lido no ecra
-			mov		dl, al
-			int		21H	
+		call 	LE_TECLA
+		cmp 	ah, 1
+		je 		ESTEND
+		cmp 	al, 1Bh    ; ESCAPE (27 em hexadecimal)
+		je 		FIM
+		cmp 	al, 20h    ; ESPAÇO (32 em hexadecimal)
+		je 		PODE_ESCREVER
+		cmp 	al, 0    ; Verifica as setas
+		je 		VERIFICAR_SETA
+		jmp 	LER_SETA
 
-			goto_xy	POSx,POSy
-			
-			
-			jmp		LER_SETA
+PODE_ESCREVER:
+		goto_xy POSx, POSy  ; verifica se pode escrever o caracter no ecran
+		mov 	CL, Car
+		cmp 	CL, 20h    ; Só escreve se for espaço em branco
+		jne 	LER_SETA
+		mov 	ah, 02h    ; coloca o caracter lido no ecra
+		mov 	dl, al
+		int 	21H
+
+		goto_xy POSx, POSy
+		jmp 	LER_SETA
+
+VERIFICAR_SETA:
+		cmp 	ah, 0    ; Verifica o segundo byte de ah para distinguir as setas
+		je 		SETAS
+		jmp 	LER_SETA
+
+SETAS:
+		cmp 	al, 4Bh    ; Setas: esquerda
+		je 		PODE_ESCREVER
+		cmp 	al, 4Dh    ; Setas: direita
+		je 		PODE_ESCREVER
+		cmp 	al, 48h    ; Setas: cima
+		je 		PODE_ESCREVER
+		cmp 	al, 50h    ; Setas: baixo
+		je 		PODE_ESCREVER
+		jmp 	LER_SETA
 		
-ESTEND:		cmp 	al,48h
-			jne		BAIXO
-			dec		POSy		;cima
-			jmp		CICLO
+ESTEND:
+		cmp 	al,48h
+		jne		BAIXO
+		dec		POSy		;cima
+		jmp		CICLO
 
-BAIXO:		cmp		al,50h
-			jne		ESQUERDA
-			inc 	POSy		;Baixo
-			jmp		CICLO
+BAIXO:
+		cmp		al,50h
+		jne		ESQUERDA
+		inc 	POSy		;Baixo
+		jmp		CICLO
 
 ESQUERDA:
-			cmp		al,4Bh
-			jne		DIREITA
-			sub		POSx, 2		;Esquerda
-			jmp		CICLO
+		cmp		al,4Bh
+		jne		DIREITA
+		sub		POSx, 2		;Esquerda
+		jmp		CICLO
 
-DIREITA:	
-			cmp		al,4Dh
-			jne		LER_SETA 
-			add 	POSx, 2 	;Direita Mudei isto para andar 2 casas em vez de 1. troquei o inc por add
-			jmp		CICLO
+DIREITA:
+		cmp		al,4Dh
+		jne		LER_SETA 
+		add 	POSx, 2 	;Direita Mudei isto para andar 2 casas em vez de 1. troquei o inc por add
+		jmp		CICLO
 
 
 ;LIMITA O MOVIMENTO AO TABULEIRO ULTIMATE
