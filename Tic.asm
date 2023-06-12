@@ -37,6 +37,7 @@ dseg	segment para public 'data'
 		Jogador2 		db  "Tomas",'$'	; aqui vai ser a string inserida pelo utilizador
 
 		array    		db  81 dup(?)   ; Array de 81 elementos
+		simbolo			db 'X', 'O'
 
 dseg	ends
 
