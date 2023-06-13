@@ -35,10 +35,12 @@ dseg	segment para public 'data'
 
 		Jogador1 		db  "- Pedro",'$' ; aqui vai ser a string inserida pelo utilizador
 		Jogador2 		db  "- Tomas",'$'	; aqui vai ser a string inserida pelo utilizador
-		JogadorAtual    db 	1 
+		JogadorAtual    db 	1
+		auxJogadorAtual db 	1 
 
 		auxSalta		db	1
 		auxSimbolo		db	1
+		bool1Simbolo 	db 	0
 
 		array    		db  81 dup(?)   ; Array de 81 elementos
 
@@ -156,7 +158,7 @@ AVATAR	PROC
 			mov		ax,0B800h
 			mov		es,ax
 			
-CICLO:			
+CICLO:	
 		goto_xy	POSx,POSy		; Vai para nova possi��o
 		mov 	ah, 08h
 		mov		bh,0			; numero da p�gina
@@ -167,7 +169,7 @@ CICLO:
 		goto_xy	78,0			; Mostra o caractr que estava na posi��o do AVATAR
 		mov		ah, 02h			; IMPRIME caracter da posi��o no canto
 		mov		dl, Car	
-		int		21H			
+		int		21H		
 
 		cmp		al, 177
 		je		PAREDE
@@ -178,8 +180,29 @@ CICLO:
 		cmp		al, 205
 		je		SALTA_Y
 		
-		goto_xy	POSx,POSy	; Vai para posi��o do cursor
-		
+		goto_xy	10, 4
+		cmp	bool1Simbolo, 0
+		jne	ALTERA_SIMBOLO ; Pula para a alteração de símbolo se bool1Simbolo for diferente de 0
+
+	EXIBIR_JOGADOR_ATUAL:
+		mov	dl, jogadorAtual
+		jmp	MOSTRA_XO
+
+	ALTERA_SIMBOLO:
+		mov	ah, 02h
+		mov	dl, jogadorAtual
+		cmp	dl, 'X'
+		je	ALTERA_PARA_O
+		mov	dl, 'X'
+		jmp	MOSTRA_XO
+
+	ALTERA_PARA_O:
+		mov	dl, 'O'
+
+	MOSTRA_XO:
+		int	21h ; Exibir caractere
+
+		goto_xy	POSx,POSy	; Vai para posi��o do cursor		
 
 LER_SETA:
 		
@@ -207,24 +230,55 @@ LER_SETA:
 		jmp 	LER_SETA
 
 PODE_ESCREVER:
+
     goto_xy POSx, POSy  ; verifica se pode escrever o caractere no ecrã
-    mov 	CL, Car
-    cmp 	CL, 20h    ; Só escreve se for espaço em branco
-    jne 	LER_SETA
-    mov 	ah, 02h    ; coloca o caractere lido no ecrã
-    mov 	dl, JogadorAtual
-    int 	21H
+    mov CL, Car
+    cmp CL, 20h    ; Só escreve se for espaço em branco
+    jne LER_SETA
+
+    ; Verifica se a variável já foi exibida
+    cmp bool1Simbolo, 0
+    je PRIMEIRA_EXIBICAO
+
+    ; Alternar entre 'X' e 'O'
+    cmp JogadorAtual, 'X'
+    je ESCREVER_O
+    mov dl, 'X'
+    jmp ESCREVER
+
+ESCREVER_O:
+    mov dl, 'O'
+
+ESCREVER:
+    mov ah, 02h    ; coloca o caractere lido no ecrã
+    mov al, dl     ; caractere a ser exibido
+    int 21H
 	
-	cmp		JogadorAtual,"X"
-	jne		mudaSimbolo
-	mov		dl,"O"
-	mov		JogadorAtual,dl
 
-	mudaSimbolo:
-	mov		dl,"X"
-	mov		JogadorAtual,dl
+    ; Atualizar flag de exibição
+    mov bool1Simbolo, 1
 
-    jmp 	LER_SETA
+    ; Alternar jogadorAtual
+    cmp JogadorAtual, 'X'
+    je ATUALIZAR_JOGADOR_O
+    mov JogadorAtual, 'X'
+    jmp CICLO
+
+ATUALIZAR_JOGADOR_O:
+    mov JogadorAtual, 'O'
+
+    jmp CICLO
+
+PRIMEIRA_EXIBICAO:
+    ; Exibe o caractere inicial no ecrã
+    mov ah, 02h
+    mov dl, JogadorAtual
+    int 21H
+
+    ; Atualizar flag de exibição
+    mov bool1Simbolo, 1
+
+    jmp CICLO
 
 VERIFICAR_SETA:
 		cmp 	ah, 0    ; Verifica o segundo byte de ah para distinguir as setas
@@ -352,7 +406,6 @@ Main  proc
 		s_ajogar:
 		MOV DL, AL   ; Mover o símbolo para DL
 		MOV AH, 02H
-		INT 21H
 
 		MOV JogadorAtual, AL ;guarda quem é que está a jogar
 		
