@@ -35,10 +35,12 @@ dseg	segment para public 'data'
 
 		Jogador1 		db  "- Pedro",'$' ; aqui vai ser a string inserida pelo utilizador
 		Jogador2 		db  "- Tomas",'$'	; aqui vai ser a string inserida pelo utilizador
-		JogadorAtual    db 1 
+		JogadorAtual    db 	1 
+
+		auxSalta		db	1
+		auxSimbolo		db	1
 
 		array    		db  81 dup(?)   ; Array de 81 elementos
-		simbolo			db 'X', 'O'
 
 dseg	ends
 
@@ -186,6 +188,8 @@ LER_SETA:
 		mov 	POSxa, al
 		mov 	al, POSy
 		mov 	POSya, al
+		
+		goto_xy POSx, POSy
 
 		call 	LE_TECLA
 		cmp 	ah, 1
@@ -209,8 +213,16 @@ PODE_ESCREVER:
     jne 	LER_SETA
     mov 	ah, 02h    ; coloca o caractere lido no ecrã
     mov 	dl, JogadorAtual
-	
     int 	21H
+	
+	cmp		JogadorAtual,"X"
+	jne		mudaSimbolo
+	mov		dl,"O"
+	mov		JogadorAtual,dl
+
+	mudaSimbolo:
+	mov		dl,"X"
+	mov		JogadorAtual,dl
 
     jmp 	LER_SETA
 
@@ -234,24 +246,28 @@ ESTEND:
 		cmp 	al,48h
 		jne		BAIXO
 		dec		POSy		;cima
+		mov 	auxSalta, al
 		jmp		CICLO
 
 BAIXO:
 		cmp		al,50h
 		jne		ESQUERDA
 		inc 	POSy		;Baixo
+		mov 	auxSalta, al
 		jmp		CICLO
 
 ESQUERDA:
 		cmp		al,4Bh
 		jne		DIREITA
 		sub		POSx, 2		;Esquerda
+		mov 	auxSalta, al
 		jmp		CICLO
 
 DIREITA:
 		cmp		al,4Dh
 		jne		LER_SETA 
 		add 	POSx, 2 	;Direita Mudei isto para andar 2 casas em vez de 1. troquei o inc por add
+		mov 	auxSalta, al
 		jmp		CICLO
 
 
@@ -265,25 +281,25 @@ PAREDE:
 		jmp 	CICLO
 
 SALTA_X:
-		cmp		al,4Bh ;Esquerda
-		jne 	ADD_X
-		sub 	POSx, 2
-		jmp		CICLO
+        cmp     auxSalta,4Bh ;Esquerda
+        jne     ADD_X
+        sub     POSx, 2
+        jmp     CICLO
 
 ADD_X: ;Direita
-		cmp		al,4Dh 
-		add 	POSx, 2	
-		jmp		CICLO
+        cmp     auxSalta,4Dh 
+        add     POSx, 2
+        jmp     CICLO
 
 SALTA_Y:
-		cmp		al,50h ;Baixo
-		jne 	SUB_Y
-		inc 	POSy
-		jmp		CICLO
+		cmp     auxSalta,50h ;Baixo
+        jne     SUB_Y
+        inc     POSy
+        jmp     CICLO
 
 SUB_Y: ;Cima
-		dec 	POSy
-		jmp		CICLO		
+        dec     POSy
+        jmp     CICLO	
 
 fim:				
 			RET
@@ -338,7 +354,7 @@ Main  proc
 		MOV AH, 02H
 		INT 21H
 
-		MOV [JogadorAtual], AL ;guarda quem é que está a jogar
+		MOV JogadorAtual, AL ;guarda quem é que está a jogar
 		
 		;Jogador1
 		GOTO_XY		1,1
@@ -364,10 +380,9 @@ Main  proc
 
 		goto_xy		0,0
 		call		IMP_FICH
+
 		call 		AVATAR
 		goto_xy		0,22
-
-		
 
 		mov			ah,4CH
 		INT			21H
