@@ -33,6 +33,10 @@ dseg	segment para public 'data'
 		POSya			db	4	; posicao anterior de y
 		POSxa			db	4	; posicao anterior de x
 
+		POSyE			db	7	; posicao escrita de y
+		POSxE			db	4	; posicao escrita de x
+		SimbE			db	1	; simbolo escrito
+
 		Jogador1 		db  "- Pedro",'$' ; aqui vai ser a string inserida pelo utilizador
 		Jogador2 		db  "- Tomas",'$'	; aqui vai ser a string inserida pelo utilizador
 		JogadorAtual    db 	1
@@ -171,6 +175,21 @@ CICLO:
 		mov		dl, Car	
 		int		21H		
 
+		;mostra o array (teste)
+		goto_xy	74,0
+		mov si, 0                   ; Índice da posição do array a ser impressa
+		mov al, array[si]           ; Obtém o valor na posição especificada
+		mov ah, 02h                 ; Função de impressão do DOS
+		int 21h 
+		;
+		;mostra o array (teste)
+		goto_xy	76,0
+		mov si, 1                   ; Índice da posição do array a ser impressa
+		mov al, array[si]           ; Obtém o valor na posição especificada
+		mov ah, 02h                 ; Função de impressão do DOS
+		int 21h 
+		;
+
 		cmp		al, 177
 		je		PAREDE
 
@@ -254,6 +273,12 @@ ESCREVER:
     mov al, dl     ; caractere a ser exibido
     int 21H
 	
+	;guardar no array
+	mov al, POSx
+	mov POSxE, al
+
+	mov al, POSy   
+	mov POSyE, al
 
     ; Atualizar flag de exibição
     mov bool1Simbolo, 1
@@ -274,6 +299,13 @@ PRIMEIRA_EXIBICAO:
     mov ah, 02h
     mov dl, JogadorAtual
     int 21H
+
+	;guardar no array
+	mov al, POSx
+	mov POSxE, al
+
+	mov al, POSy   
+	mov POSyE, al 
 
     ; Atualizar flag de exibição
     mov bool1Simbolo, 1
@@ -354,6 +386,46 @@ SALTA_Y:
 SUB_Y: ;Cima
         dec     POSy
         jmp     CICLO	
+
+;########################################################################
+;COORDS
+
+cmp POSxE, 4
+jne check_next
+cmp POSyE, 7
+jne check_next
+
+mov al, jogadorAtual
+mov byte ptr array, al ; guarda jogadorAtual na posição 0 do array
+jmp end_coord
+
+check_next:
+	; Código para a combinação (1, 0) aqui
+    cmp POSxE, 6
+    jne check_next2
+    cmp POSyE, 7
+    jne check_next2
+
+    mov al, jogadorAtual
+    mov byte ptr array+1, al ; guarda jogadorAtual na posição 1 do array
+    jmp end_coord
+
+check_next2:
+	; Código para a combinação (0, 1) aqui
+    cmp POSxE, 0
+    jne end_coord
+    cmp POSyE, 1
+    jne end_coord
+
+	mov al, jogadorAtual
+    mov byte ptr array+2, al  ; guarda jogadorAtual na posição 2 do array
+    jmp end_coord
+
+
+end_coord:
+	jmp CICLO
+
+;########################################################################
 
 fim:				
 			RET
