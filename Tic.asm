@@ -47,6 +47,8 @@ dseg	segment para public 'data'
 		bool1Simbolo 	db 	0
 
 		array    		db  81 dup(?)   ; Array de 81 elementos
+
+		boardWinner1	db	0
 		
 		;testes
 		teste2    		db  81 dup('-')
@@ -1467,16 +1469,69 @@ end_coord:
 ;VERIFICA WINNER
 
 WINNER:
+	; carrega o endereço do array em SI
+	mov si, offset array
 
 	BOARD_1:
-	;LINHAS
-	cmp 
+		LINHAS:
+			; Verifica se as primeiras 3 posições são iguais
+			mov al, [si] ; carrega o primeiro caractere em AL
+			cmp al, [si+1] ; compara o primeiro caractere com o segundo
+			jne LINHA_1_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+2] ; compara o primeiro caractere com o terceiro
+			jne LINHA_1_2 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard1
+
+			LINHA_1_2:
+			; Verifica se as próximas 3 posições são iguais
+			add si, 3 ; avança SI para a próxima posição
+			mov al, [si] ; carrega o quarto caractere em AL
+			cmp al, [si+1] ; compara o quarto caractere com o quinto
+			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+2] ; compara o quarto caractere com o sexto
+			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard1
+
+			LINHA_1_3:
+			; Verifica se as últimas 3 posições são iguais
+			add si, 3 ; avança SI para a próxima posição
+			mov al, [si] ; carrega o sétimo caractere em AL
+			cmp al, [si+1] ; compara o sétimo caractere com o oitavo
+			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+2] ; compara o sétimo caractere com o nono
+			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard1
+
+		; se chegou até aqui ganhou
+		ganhouBoard1:
+			mov boardWinner1, '1'
+			jmp MOSTRA_WINNER
 
 	;COLUNAS
 
 
 	;DIAGONAIS
 
+
+	not_winner:
+		jmp CICLO
+
+;########################################################################
+;VERIFICA WINNER
+
+MOSTRA_WINNER:
+
+	mov al, boardWinner1
+    cmp al, 49  ; Comparação corrigida para o código ASCII do caractere '1'
+    jne CICLO
+
+	;goto_xy	53,11
+	goto_xy	45,11
+	mov ah, 02h
+    mov dl, JogadorAtual
+    int 21H
+	
+	jmp CICLO
 
 ;########################################################################
 
