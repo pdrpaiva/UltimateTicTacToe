@@ -272,7 +272,7 @@ LER_SETA:
 		je 		ESTEND
 		cmp 	al, 1Bh    ; ESCAPE (27 em hexadecimal)
 		je 		FIM
-		cmp 	al, 20h    ; ESPAÇO (32 em hexadecimal)
+		cmp 	al, 0Dh    ; ESPAÇO (32 em hexadecimal)
 		je 		PODE_ESCREVER
 		cmp 	al, 58h    ; X
 		je 		PODE_ESCREVER
