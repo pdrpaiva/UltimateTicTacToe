@@ -50,6 +50,7 @@ dseg	segment para public 'data'
 		array 			db 	81 dup('N','A')
 
 		boardWinner1	db	0
+		boardWinner2	db	0
 		
 		;testes
 		teste2    		db  81 dup('-')
@@ -1470,13 +1471,13 @@ end_coord:
 
 WINNER:
 	mov si, offset array ; carrega o endereço do array em SI
+	
 	BOARD_1:
 		mov al, byte ptr [boardWinner1]
 		cmp al, '1'
-		je	not_winner
+		je	BOARD_2
 
-		LINHAS:
-			; Verifica se as primeiras 3 posições são iguais
+		LINHAS_1:
 			mov al, [si] ; carrega o primeiro caractere em AL
 			cmp al, [si+1] ; compara o primeiro caractere com o segundo
 			jne LINHA_1_2 ; pula para "not_winner" se forem diferentes
@@ -1485,36 +1486,89 @@ WINNER:
 			jmp	ganhouBoard1
 
 			LINHA_1_2:
-			; Verifica se as próximas 3 posições são iguais
-			add si, 3 ; avança SI para a próxima posição
-			mov al, [si] ; carrega o quarto caractere em AL
-			cmp al, [si+1] ; compara o quarto caractere com o quinto
+			mov al, [si+3] ; carrega o quarto caractere em AL
+			cmp al, [si+4] ; compara o quarto caractere com o quinto
 			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
-			cmp al, [si+2] ; compara o quarto caractere com o sexto
+			cmp al, [si+5] ; compara o quarto caractere com o sexto
 			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
 			jmp	ganhouBoard1
 
 			LINHA_1_3:
-			; Verifica se as últimas 3 posições são iguais
-			add si, 3 ; avança SI para a próxima posição
-			mov al, [si] ; carrega o sétimo caractere em AL
-			cmp al, [si+1] ; compara o sétimo caractere com o oitavo
-			jne not_winner ; pula para "not_winner" se forem diferentes
-			cmp al, [si+2] ; compara o sétimo caractere com o nono
-			jne not_winner ; pula para "not_winner" se forem diferentes
+			mov al, [si+6] ; carrega o sétimo caractere em AL
+			cmp al, [si+7] ; compara o sétimo caractere com o oitavo
+			jne BOARD_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+8] ; compara o sétimo caractere com o nono
+			jne BOARD_2 ; pula para "not_winner" se forem diferentes
 			jmp	ganhouBoard1
+
+		COLUNAS_1:
+			mov al, [si] ; carrega o primeiro caractere em AL
+			cmp al, [si+1] ; compara o primeiro caractere com o segundo
+			jne LINHA_1_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+2] ; compara o primeiro caractere com o terceiro
+			jne LINHA_1_2 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard1
+
+			COLUNA_1_2:
+			mov al, [si+3] ; carrega o quarto caractere em AL
+			cmp al, [si+4] ; compara o quarto caractere com o quinto
+			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+5] ; compara o quarto caractere com o sexto
+			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard1
+
+			COLUNA_1_3:
+			mov al, [si+6] ; carrega o sétimo caractere em AL
+			cmp al, [si+7] ; compara o sétimo caractere com o oitavo
+			jne BOARD_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+8] ; compara o sétimo caractere com o nono
+			jne BOARD_2 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard1
+		
+	BOARD_2:
+		mov al, byte ptr [boardWinner2]
+		cmp al, '1'
+		je	not_winner
+
+		LINHAS_2:
+			mov al, [si+9] ; carrega o primeiro caractere em AL
+			cmp al, [si+10] ; compara o primeiro caractere com o segundo
+			jne LINHA_2_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+11] ; compara o primeiro caractere com o terceiro
+			jne LINHA_2_2 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard2
+
+			LINHA_2_2:
+			mov al, [si+12] ; carrega o quarto caractere em AL
+			cmp al, [si+13] ; compara o quarto caractere com o quinto
+			jne LINHA_2_3 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+14] ; compara o quarto caractere com o sexto
+			jne LINHA_2_3 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard2
+
+			LINHA_2_3:
+			mov al, [si+15] ; carrega o sétimo caractere em AL
+			cmp al, [si+16] ; compara o sétimo caractere com o oitavo
+			jne not_winner ; pula para "not_winner" se forem diferentes
+			cmp al, [si+17] ; compara o sétimo caractere com o nono
+			jne not_winner ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoard2
 
 	not_winner:
 		jmp CICLO
 
 	ganhouBoard1:
 	mov byte ptr [boardWinner1], '1' ; Atualiza boardWinner1 para '1'
-	jmp MOSTRA_WINNER
+	jmp MOSTRA_WINNER_1
+
+	ganhouBoard2:
+	mov byte ptr [boardWinner2], '1' ; Atualiza boardWinner1 para '1'
+	jmp MOSTRA_WINNER_2
 
 ;########################################################################
 ;VERIFICA WINNER
 
-MOSTRA_WINNER:
+MOSTRA_WINNER_1:
 
 	mov al, byte ptr [boardWinner1] ; Carrega o valor de boardWinner1 em al
 	cmp al, '1' ; Compara com o caractere '1'
@@ -1527,6 +1581,18 @@ MOSTRA_WINNER:
 	
 	jmp CICLO
 
+MOSTRA_WINNER_2:
+
+	mov al, byte ptr [boardWinner2] ; Carrega o valor de boardWinner1 em al
+	cmp al, '1' ; Compara com o caractere '1'
+	jne CICLO
+	
+	goto_xy	55,11
+	mov ah, 02h
+    mov dl, JogadorAtual
+    int 21H
+	
+	jmp CICLO
 ;########################################################################
 
 fim:				
