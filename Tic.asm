@@ -284,6 +284,8 @@ LER_SETA:
 
 PODE_ESCREVER:
 
+    ;call DESATIVA
+
     goto_xy POSx, POSy  ; verifica se pode escrever o caractere no ecrã
     mov CL, Car
     cmp CL, 20h    ; Só escreve se for espaço em branco
@@ -2175,6 +2177,68 @@ MOSTRA_WINNER_1:
     add si, 0   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 	
+    ;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array
+    LOOP_WINNER_1:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_1 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_1 ; Pula para a próxima iteração se for igual a 'O'
+        
+        MOV BYTE PTR [SI], '-'
+
+    PROXIMO_1:
+        INC SI
+        LOOP LOOP_WINNER_1  ; Repita o loop até que CX seja igual a zero
+
+    ;DESATIVAR
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array
+    MOV DI, 0  ; Inicializa o contador de posição como 0
+
+    LOOP_DESATIVA_1:
+        MOV AL, [SI]
+        CMP AL, '-'
+        JNE PROXIMO_DESATIVA_1
+
+        ; Exibir 0FFh na tela com base no índice do array
+        CMP DI, 0
+        JE DESATIVA_1_0
+        CMP DI, 1
+        JE DESATIVA_1_1
+        CMP DI, 2
+        JE DESATIVA_1_2
+
+        JMP PROXIMO_DESATIVA_1
+
+        DESATIVA_1_0:
+            goto_xy 4, 7
+            mov ah, 02h
+            mov dl, 0FFh
+            int 21H
+            JMP PROXIMO_DESATIVA_1
+
+        DESATIVA_1_1:
+            goto_xy 6, 7
+            mov ah, 02h
+            mov dl, 0FFh
+            int 21H
+            JMP PROXIMO_DESATIVA_1
+
+        DESATIVA_1_2:
+            goto_xy 8, 7
+            mov ah, 02h
+            mov dl, 0FFh
+            int 21H
+            JMP PROXIMO_DESATIVA_1
+
+    PROXIMO_DESATIVA_1:
+        INC SI
+        INC DI
+        LOOP LOOP_DESATIVA_1  ; Repita o loop até que CX seja igual a zero
+
 	;jmp CICLO
 	jmp WINNER_FINAL
 
@@ -2194,6 +2258,23 @@ MOSTRA_WINNER_2:
     mov si, offset arrayFinal
     add si, 1   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
+
+    
+    ;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 9
+    LOOP_WINNER_2:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_2 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_2 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], 0FFh
+
+    PROXIMO_2:
+        INC SI
+        LOOP LOOP_WINNER_2  ; Repita o loop até que CX seja igual a zero
 	
 	;jmp CICLO
 	jmp WINNER_FINAL
@@ -2434,7 +2515,40 @@ MOSTRA_WINNER_FINAL:
 	jmp CICLO
 
 ;########################################################################
+;TESTE
 
+DESATIVA:
+
+    ;mov al, byte ptr [boardWinner1] ; Carrega o valor de boardWinner1 em al
+	;cmp al, '1'
+    ;jne CICLO
+
+
+    ;DESATIVA_BOARD_1:
+    ;MOV CX, 9  ; Defina o contador do loop para 9
+    ;MOV SI, offset array
+    ;LOOP_DESATIVA_1:
+    ;    MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+    ;    CMP AL, 0FFh 
+    ;    JE DESATIVA_BOARD_2 
+
+    ;PROXIMO_D_1:
+    ;    INC SI
+    ;    LOOP LOOP_DESATIVA_1  ; Repita o loop até que CX seja igual a zero
+
+    ;DESATIVA_BOARD_2:
+    ;MOV CX, 9  ; Defina o contador do loop para 9
+    ;MOV SI, offset array + 9
+    ;LOOP_DESATIVA_2:
+    ;    MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+    ;    CMP AL, 0FFh 
+    ;    JE CICLO 
+
+    ;PROXIMO_D_2:
+    ;    INC SI
+    ;    LOOP LOOP_DESATIVA_2  ; Repita o loop até que CX seja igual a zero
+
+;########################################################################
 fim:				
 			RET
 AVATAR		endp
