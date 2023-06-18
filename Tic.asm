@@ -2261,11 +2261,47 @@ MOSTRA_WINNER_2:
         CMP AL, 'O' ; Compara com o caractere 'O'
         JE PROXIMO_2 ; Pula para a próxima iteração se for igual a 'O'
        
-        MOV BYTE PTR [SI], 0FFh
-
+        MOV BYTE PTR [SI], '-'
     PROXIMO_2:
         INC SI
         LOOP LOOP_WINNER_2  ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_2:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 9
+        MOV DI, 9 ; Inicializa o contador de posição como 0
+
+        LOOP_DESATIVA_2:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_2
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 9
+            JE DESATIVA_2_0
+            CMP DI, 10
+            JE DESATIVA_2_1
+            CMP DI, 11
+            JE DESATIVA_2_2
+            CMP DI, 12
+            JE DESATIVA_2_3
+            CMP DI, 13
+            JE DESATIVA_2_4
+            CMP DI, 14
+            JE DESATIVA_2_5
+            CMP DI, 15
+            JE DESATIVA_2_6
+            CMP DI, 16
+            JE DESATIVA_2_7
+            CMP DI, 17
+            JE DESATIVA_2_8
+
+            JMP PROXIMO_DESATIVA_2
+
+        PROXIMO_DESATIVA_2:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_2  ; Repita o loop até que CX seja igual a zero
 	
 	;jmp CICLO
 	jmp WINNER_FINAL
@@ -2287,6 +2323,59 @@ MOSTRA_WINNER_3:
     add si, 2   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
+ 
+    ;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 18
+    LOOP_WINNER_3:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_3 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_3 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], '-'
+    PROXIMO_3:
+        INC SI
+        LOOP LOOP_WINNER_3  ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_3:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 18
+        MOV DI, 18 ; Inicializa o contador de posição como 18
+
+        LOOP_DESATIVA_3:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_3
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 18
+            JE DESATIVA_3_0
+            CMP DI, 19
+            JE DESATIVA_3_1
+            CMP DI, 20
+            JE DESATIVA_3_2
+            CMP DI, 21
+            JE DESATIVA_3_3
+            CMP DI, 22
+            JE DESATIVA_3_4
+            CMP DI, 23
+            JE DESATIVA_3_5
+            CMP DI, 24
+            JE DESATIVA_3_6
+            CMP DI, 25
+            JE DESATIVA_3_7
+            CMP DI, 26
+            JE DESATIVA_3_8
+
+            JMP PROXIMO_DESATIVA_3
+
+        PROXIMO_DESATIVA_3:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_3  ; Repita o loop até que CX seja igual a zero
+
 	;jmp CICLO
 	jmp WINNER_FINAL
 
@@ -2306,6 +2395,58 @@ MOSTRA_WINNER_4:
     mov si, offset arrayFinal
     add si, 3   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
+
+    ;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 27
+    LOOP_WINNER_4:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_4 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_4 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], '-'
+    PROXIMO_4:
+        INC SI
+        LOOP LOOP_WINNER_4  ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_4:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 27
+        MOV DI, 27 ; Inicializa o contador de posição como 18
+
+        LOOP_DESATIVA_4:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_4
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 27
+            JE DESATIVA_4_0
+            CMP DI, 28
+            JE DESATIVA_4_1
+            CMP DI, 29
+            JE DESATIVA_4_2
+            CMP DI, 30
+            JE DESATIVA_4_3
+            CMP DI, 31
+            JE DESATIVA_4_4
+            CMP DI, 32
+            JE DESATIVA_4_5
+            CMP DI, 33
+            JE DESATIVA_4_6
+            CMP DI, 34
+            JE DESATIVA_4_7
+            CMP DI, 35
+            JE DESATIVA_4_8
+
+            JMP PROXIMO_DESATIVA_4
+
+        PROXIMO_DESATIVA_4:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_4 ; Repita o loop até que CX seja igual a zero
 	
 	;jmp CICLO
 	jmp WINNER_FINAL
@@ -2327,6 +2468,58 @@ MOSTRA_WINNER_5:
     add si, 4   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
+;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 36
+    LOOP_WINNER_5:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_5 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_5 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], '-'
+    PROXIMO_5:
+        INC SI
+        LOOP LOOP_WINNER_5  ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_5:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 36
+        MOV DI, 36 ; Inicializa o contador de posição como 18
+
+        LOOP_DESATIVA_5:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_5
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 36
+            JE DESATIVA_5_0
+            CMP DI, 37
+            JE DESATIVA_5_1
+            CMP DI, 38
+            JE DESATIVA_5_2
+            CMP DI, 39
+            JE DESATIVA_5_3
+            CMP DI, 40
+            JE DESATIVA_5_4
+            CMP DI, 41
+            JE DESATIVA_5_5
+            CMP DI, 42
+            JE DESATIVA_5_6
+            CMP DI, 43
+            JE DESATIVA_5_7
+            CMP DI, 44
+            JE DESATIVA_5_8
+
+            JMP PROXIMO_DESATIVA_5
+
+        PROXIMO_DESATIVA_5:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_5 ; Repita o loop até que CX seja igual a zero
+
     ;jmp CICLO
 	jmp WINNER_FINAL
 
@@ -2346,6 +2539,59 @@ MOSTRA_WINNER_6:
     mov si, offset arrayFinal
     add si, 5   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
+
+    ;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 45
+    LOOP_WINNER_6:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_6 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_6 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], '-'
+    PROXIMO_6:
+        INC SI
+        LOOP LOOP_WINNER_6  ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_6:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 45
+        MOV DI, 45 ; Inicializa o contador de posição como 45
+
+        LOOP_DESATIVA_6:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_6
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 45
+            JE DESATIVA_6_0
+            CMP DI, 46
+            JE DESATIVA_6_1
+            CMP DI, 47
+            JE DESATIVA_6_2
+            CMP DI, 48
+            JE DESATIVA_6_3
+            CMP DI, 49
+            JE DESATIVA_6_4
+            CMP DI, 50
+            JE DESATIVA_6_5
+            CMP DI, 51
+            JE DESATIVA_6_6
+            CMP DI, 52
+            JE DESATIVA_6_7
+            CMP DI, 53
+            JE DESATIVA_6_8
+
+            JMP PROXIMO_DESATIVA_6
+
+        PROXIMO_DESATIVA_6:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_6 ; Repita o loop até que CX seja igual a zero
+
 
     ;jmp CICLO
 	jmp WINNER_FINAL
@@ -2367,6 +2613,58 @@ MOSTRA_WINNER_7:
     add si, 6   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
+    ;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 54
+    LOOP_WINNER_7:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_7 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_7 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], '-'
+    PROXIMO_7:
+        INC SI
+        LOOP LOOP_WINNER_7 ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_7:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 54
+        MOV DI, 54 ; Inicializa o contador de posição como 54
+
+        LOOP_DESATIVA_7:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_7
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 54
+            JE DESATIVA_7_0
+            CMP DI, 55
+            JE DESATIVA_7_1
+            CMP DI, 56
+            JE DESATIVA_7_2
+            CMP DI, 57
+            JE DESATIVA_7_3
+            CMP DI, 58
+            JE DESATIVA_7_4
+            CMP DI, 59
+            JE DESATIVA_7_5
+            CMP DI, 60
+            JE DESATIVA_7_6
+            CMP DI, 61
+            JE DESATIVA_7_7
+            CMP DI, 62
+            JE DESATIVA_7_8
+
+            JMP PROXIMO_DESATIVA_7
+
+        PROXIMO_DESATIVA_7:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_7 ; Repita o loop até que CX seja igual a zero
+
     ;jmp CICLO
 	jmp WINNER_FINAL
 
@@ -2387,6 +2685,58 @@ MOSTRA_WINNER_8:
     add si, 7   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
+    ;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 63
+    LOOP_WINNER_8:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_8 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_8 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], '-'
+    PROXIMO_8:
+        INC SI
+        LOOP LOOP_WINNER_8 ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_8:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 63
+        MOV DI, 63 ; Inicializa o contador de posição como 63
+
+        LOOP_DESATIVA_8:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_8
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 63
+            JE DESATIVA_8_0
+            CMP DI, 64
+            JE DESATIVA_8_1
+            CMP DI, 65
+            JE DESATIVA_8_2
+            CMP DI, 66
+            JE DESATIVA_8_3
+            CMP DI, 67
+            JE DESATIVA_8_4
+            CMP DI, 68
+            JE DESATIVA_8_5
+            CMP DI, 69
+            JE DESATIVA_8_6
+            CMP DI, 70
+            JE DESATIVA_8_7
+            CMP DI, 71
+            JE DESATIVA_8_8
+
+            JMP PROXIMO_DESATIVA_8
+
+        PROXIMO_DESATIVA_8:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_8 ; Repita o loop até que CX seja igual a zero
+
     ;jmp CICLO
 	jmp WINNER_FINAL
 
@@ -2406,6 +2756,58 @@ MOSTRA_WINNER_9:
     mov si, offset arrayFinal
     add si, 8   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
+
+;desativar o mini tabuleiro
+    MOV CX, 9  ; Defina o contador do loop para 9
+    MOV SI, offset array + 72
+    LOOP_WINNER_9:
+        MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
+        CMP AL, 'X' ; Compara com o caractere 'X'
+        JE PROXIMO_9 ; Pula para a próxima iteração se for igual a 'X'
+        CMP AL, 'O' ; Compara com o caractere 'O'
+        JE PROXIMO_9 ; Pula para a próxima iteração se for igual a 'O'
+       
+        MOV BYTE PTR [SI], '-'
+    PROXIMO_9:
+        INC SI
+        LOOP LOOP_WINNER_9 ; Repita o loop até que CX seja igual a zero
+
+    DESATIVAR_9:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array + 72
+        MOV DI, 72 ; Inicializa o contador de posição como 63
+
+        LOOP_DESATIVA_9:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_9
+
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 72
+            JE DESATIVA_9_0
+            CMP DI, 73
+            JE DESATIVA_9_1
+            CMP DI, 74
+            JE DESATIVA_9_2
+            CMP DI, 75
+            JE DESATIVA_9_3
+            CMP DI, 76
+            JE DESATIVA_9_4
+            CMP DI, 77
+            JE DESATIVA_9_5
+            CMP DI, 78
+            JE DESATIVA_9_6
+            CMP DI, 79
+            JE DESATIVA_9_7
+            CMP DI, 80
+            JE DESATIVA_9_8
+
+            JMP PROXIMO_DESATIVA_9
+
+        PROXIMO_DESATIVA_9:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_9 ; Repita o loop até que CX seja igual a zero
 
     ;jmp CICLO
 	jmp WINNER_FINAL
@@ -2462,7 +2864,7 @@ WINNER_FINAL:
 			jmp	ganhouBoardFinal
 
 			COLUNA_FINAL_3:
-			mov al, [si+3] ; carrega o sétimo caractere em AL
+			mov al, [si+2] ; carrega o sétimo caractere em AL
 			cmp al, [si+5] ; compara o sétimo caractere com o oitavo
 			jne DIAGONAIS_FINAL ; pula para "not_winner" se forem diferentes
 			cmp al, [si+8] ; compara o sétimo caractere com o nono
@@ -2573,6 +2975,538 @@ MOSTRA_WINNER_FINAL:
         mov dl, 0FFh
         int 21H
         JMP PROXIMO_DESATIVA_1
+    
+;DESATIVA_TABULEIRO_2
+    DESATIVA_2_0:
+        goto_xy 12, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+    DESATIVA_2_1:
+        goto_xy 14, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+    DESATIVA_2_2:
+        goto_xy 16, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+    
+    ;linha 2
+    DESATIVA_2_3:
+        goto_xy 12, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+    DESATIVA_2_4:
+        goto_xy 14, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+    DESATIVA_2_5:
+        goto_xy 16, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+    ;linha 3
+    DESATIVA_2_6:
+        goto_xy 12, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+    DESATIVA_2_7:
+        goto_xy 14, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+    DESATIVA_2_8:
+        goto_xy 16, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_2
+
+;DESATIVA_TABULEIRO_3
+    DESATIVA_3_0:
+        goto_xy 20, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+    DESATIVA_3_1:
+        goto_xy 22, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+    DESATIVA_3_2:
+        goto_xy 24, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+    
+    ;linha 2
+    DESATIVA_3_3:
+        goto_xy 20, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+    DESATIVA_3_4:
+        goto_xy 22, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+    DESATIVA_3_5:
+        goto_xy 24, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+    ;linha 3
+    DESATIVA_3_6:
+        goto_xy 20, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+    DESATIVA_3_7:
+        goto_xy 22, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+    DESATIVA_3_8:
+        goto_xy 24, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_3
+
+;DESATIVA_TABULEIRO_4
+    DESATIVA_4_0:
+        goto_xy 4, 11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+    DESATIVA_4_1:
+        goto_xy 6, 11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+    DESATIVA_4_2:
+        goto_xy 8,11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+    
+    ;linha 2
+    DESATIVA_4_3:
+        goto_xy 4, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+    DESATIVA_4_4:
+        goto_xy 6, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+    DESATIVA_4_5:
+        goto_xy 8, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+    ;linha 3
+    DESATIVA_4_6:
+        goto_xy 4, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+    DESATIVA_4_7:
+        goto_xy 6, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+    DESATIVA_4_8:
+        goto_xy 8, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_4
+
+;DESATIVA_TABULEIRO_5
+    DESATIVA_5_0:
+        goto_xy 12, 11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+
+    DESATIVA_5_1:
+        goto_xy 14, 11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+
+    DESATIVA_5_2:
+        goto_xy 16,11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+    
+    ;linha 2
+    DESATIVA_5_3:
+        goto_xy 12, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+
+    DESATIVA_5_4:
+        goto_xy 14, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+
+    DESATIVA_5_5:
+        goto_xy 16, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+
+    ;linha 3
+    DESATIVA_5_6:
+        goto_xy 12, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+
+    DESATIVA_5_7:
+        goto_xy 14, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+
+    DESATIVA_5_8:
+        goto_xy 16, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_5
+    
+;DESATIVA_TABULEIRO_6
+    DESATIVA_6_0:
+        goto_xy 20, 11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+    DESATIVA_6_1:
+        goto_xy 22, 11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+    DESATIVA_6_2:
+        goto_xy 24,11
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+    
+    ;linha 2
+    DESATIVA_6_3:
+        goto_xy 20, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+    DESATIVA_6_4:
+        goto_xy 22, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+    DESATIVA_6_5:
+        goto_xy 24, 12
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+    ;linha 3
+    DESATIVA_6_6:
+        goto_xy 20, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+    DESATIVA_6_7:
+        goto_xy 22, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+    DESATIVA_6_8:
+        goto_xy 24, 13
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_6
+
+
+;DESATIVA_TABULEIRO_7
+    DESATIVA_7_0:
+        goto_xy 4, 15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+    DESATIVA_7_1:
+        goto_xy 6, 15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+    DESATIVA_7_2:
+        goto_xy 8,15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+    
+    ;linha 2
+    DESATIVA_7_3:
+        goto_xy 4, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+    DESATIVA_7_4:
+        goto_xy 6, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+    DESATIVA_7_5:
+        goto_xy 8, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+    ;linha 3
+    DESATIVA_7_6:
+        goto_xy 4, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+    DESATIVA_7_7:
+        goto_xy 6, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+    DESATIVA_7_8:
+        goto_xy 8, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_7
+
+;DESATIVA_TABULEIRO_8
+    DESATIVA_8_0:
+        goto_xy 12, 15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+    DESATIVA_8_1:
+        goto_xy 14, 15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+    DESATIVA_8_2:
+        goto_xy 16,15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+    
+    ;linha 2
+    DESATIVA_8_3:
+        goto_xy 12, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+    DESATIVA_8_4:
+        goto_xy 14, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+    DESATIVA_8_5:
+        goto_xy 16, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+    ;linha 3
+    DESATIVA_8_6:
+        goto_xy 12, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+    DESATIVA_8_7:
+        goto_xy 14, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+    DESATIVA_8_8:
+        goto_xy 16, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_8
+
+
+;DESATIVA_TABULEIRO_9
+    DESATIVA_9_0:
+        goto_xy 20, 15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+    DESATIVA_9_1:
+        goto_xy 22, 15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+    DESATIVA_9_2:
+        goto_xy 24,15
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+    
+    ;linha 2
+    DESATIVA_9_3:
+        goto_xy 20, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+    DESATIVA_9_4:
+        goto_xy 22, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+    DESATIVA_9_5:
+        goto_xy 24, 16
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+    ;linha 3
+    DESATIVA_9_6:
+        goto_xy 20, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+    DESATIVA_9_7:
+        goto_xy 22, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+    DESATIVA_9_8:
+        goto_xy 22, 17
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_9
+
+
 
 ;########################################################################
 fim:				
