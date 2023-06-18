@@ -22,6 +22,7 @@ dseg	segment para public 'data'
         Erro_Ler_Msg    db      'Erro ao tentar ler do ficheiro$'
         Erro_Close      db      'Erro ao tentar fechar o ficheiro$'
         Fich         	db      'jogo.TXT',0
+        FichString      db      'players.TXT',0
         HandleFich      dw      0
         car_fich        db      ?
 
@@ -37,8 +38,6 @@ dseg	segment para public 'data'
 		POSxE			db	4	; posicao escrita de x
 		SimbE			db	1	; simbolo escrito
 
-		Jogador1 		db  "- Pedro",'$' ; aqui vai ser a string inserida pelo utilizador
-		Jogador2 		db  "- Tomas",'$'	; aqui vai ser a string inserida pelo utilizador
 		JogadorAtual    db 	1
 		auxJogadorAtual db 	1 
 
@@ -59,6 +58,22 @@ dseg	segment para public 'data'
 		boardWinner8	db	0
 		boardWinner9	db	0
 		FinalWinner		db	0
+
+        countPlayer1    db  0
+        countPlayer2    db  0
+
+        color             db  75
+
+        ;strings
+        msgInicio db 0ah, "ULTIMATE-TIC-TAC-TOE$"
+        msg1 db 0ah, "Jogador 1: $"
+        msg2 db 0ah, "Jogador 2: $"
+        msgFinal db 0ah, "Pressione qualquer tecla para continuar$"
+        msgVencedor db 0ah, " Fim :D$"
+        msgVencedor2 db 0ah, " Vencedor:$"
+        msgEmpate db 0ah, " Empate!$"
+        player1 db 100 dup ('$')
+        player2 db 100 dup ('$')
 
 dseg	ends
 
@@ -147,7 +162,6 @@ sai_f:
 		
 IMP_FICH	endp		
 
-
 ;########################################################################
 ; LE UMA TECLA	
 
@@ -165,6 +179,9 @@ SAI_TECLA:	RET
 LE_TECLA	endp
 
 
+
+;########################################################################
+; Avatar
 
 ;########################################################################
 ; Avatar
@@ -218,40 +235,40 @@ CICLO:
 		int	21h ; Exibir caractere
 
 	;MOSTRA O ARRAY PARA VER SE ESTÁ A GUARDAR BEM
-    mov si, offset array
-    mov cx, 81
-	goto_xy	1,19
+    ;mov si, offset array
+    ;mov cx, 81
+	;goto_xy	1,19
 
-    mostrar_array:
+    ;mostrar_array:
 	
-        mov dl, [si]
-        inc si
+    ;    mov dl, [si]
+    ;    inc si
 
         ; Exibir o caractere no Ecrã
-        mov ah, 02h
-        int 21h
+    ;    mov ah, 02h
+    ;    int 21h
 
-        dec cx
-        jnz mostrar_array
+    ;    dec cx
+    ;    jnz mostrar_array
 
 	;MOSTRA O ARRAY PARA VER SE ESTÁ A GUARDAR BEM
 
 	;MOSTRA O ARRAY FINAL PARA VER SE ESTÁ A GUARDAR BEM
-    mov si, offset arrayFinal
-    mov cx, 9
-	goto_xy	1,22
+    ;mov si, offset arrayFinal
+    ;mov cx, 9
+	;goto_xy	1,22
 
-    mostrar_arrayFinal:
+    ;mostrar_arrayFinal:
 	
-        mov dl, [si]
-        inc si
+    ;    mov dl, [si]
+    ;    inc si
 
         ; Exibir o caractere no Ecrã
-        mov ah, 02h
-        int 21h
+    ;    mov ah, 02h
+    ;    int 21h
 
-        dec cx
-        jnz mostrar_arrayFinal
+    ;    dec cx
+    ;    jnz mostrar_arrayFinal
 
 	;MOSTRA O ARRAY FINAL PARA VER SE ESTÁ A GUARDAR BEM
 
@@ -1675,7 +1692,7 @@ WINNER:
 			mov al, [si+19] ; carrega o quarto caractere em AL
 			cmp al, [si+22] ; compara o quarto caractere com o quinto
 			jne COLUNA_3_3 ; pula para "not_winner" se forem diferentes
-			cmp al, [si+24] ; compara o quarto caractere com o sexto
+			cmp al, [si+25] ; compara o quarto caractere com o sexto
 			jne COLUNA_3_3 ; pula para "not_winner" se forem diferentes
 			jmp	ganhouBoard3
 
@@ -1683,7 +1700,7 @@ WINNER:
 			mov al, [si+20] ; carrega o sétimo caractere em AL
 			cmp al, [si+23] ; compara o sétimo caractere com o oitavo
 			jne DIAGONAIS_3 ; pula para "not_winner" se forem diferentes
-			cmp al, [si+25] ; compara o sétimo caractere com o nono
+			cmp al, [si+26] ; compara o sétimo caractere com o nono
 			jne DIAGONAIS_3 ; pula para "not_winner" se forem diferentes
 			jmp	ganhouBoard3
 
@@ -2098,7 +2115,7 @@ WINNER:
 			mov al, [si+74] ; carrega o sétimo caractere em AL
 			cmp al, [si+77] ; compara o sétimo caractere com o oitavo
 			jne DIAGONAIS_9 ; pula para "not_winner" se forem diferentes
-			cmp al, [si+79] ; compara o sétimo caractere com o nono
+			cmp al, [si+80] ; compara o sétimo caractere com o nono
 			jne DIAGONAIS_9 ; pula para "not_winner" se forem diferentes
 			jmp	ganhouBoard9
 
@@ -2899,13 +2916,8 @@ MOSTRA_WINNER_FINAL:
 	mov al, byte ptr [FinalWinner] ; Carrega o valor de boardWinner1 em al
 	cmp al, '1' ; Compara com o caractere '1'
 	jne CICLO
-	
-	goto_xy	70,12
-	mov ah, 02h
-    mov dl, JogadorAtual
-    int 21H
-	
-	jmp CICLO
+
+    call FINAL
 
 ;########################################################################
 ;DESATIVA OS TABULEIROS
@@ -3506,21 +3518,20 @@ MOSTRA_WINNER_FINAL:
         int 21H
         JMP PROXIMO_DESATIVA_9
 
-
+;########################################################################
+;FINAL
 
 ;########################################################################
-fim:				
+FIM:				
 			RET
 AVATAR		endp
 
 ;########################################################################
 ;MOSTRA A STRING DOS JOGADORES
 MOSTRA MACRO STR 
-
-	MOV AH,09H
-	LEA DX,STR 
-	INT 21H
-
+    lea dx, STR + 2 ; Pular os dois primeiros bytes (tamanho da string)
+    mov ah, 9
+    int 21h
 ENDM
 
 ;########################################################################
@@ -3532,6 +3543,42 @@ Main  proc
 		mov			es,ax
 
 		call		apaga_ecran
+        
+        goto_xy		0,0
+        lea dx, msgInicio
+        mov ah, 9
+        int 21h
+
+        ; Exibir mensagem para jogador 1
+        goto_xy		0,2
+        lea dx, msg1
+        mov ah, 9
+        int 21h
+
+        ; Receber string do jogador 1
+        lea dx, player1
+        mov ah, 0ah
+        int 21h
+
+        ; Exibir mensagem para jogador 2
+        lea dx, msg2
+        mov ah, 9
+        int 21h
+
+        ; Receber string do jogador 2
+        lea dx, player2
+        mov ah, 0ah
+        int 21h
+
+        ; Exibir mensagem para jogador 1
+        goto_xy		0,5
+        lea dx, msgFinal
+        mov ah, 9
+        int 21h
+
+        call 	LE_TECLA
+
+        call		apaga_ecran
 
 		; Inicialização do gerador de números aleatórios
 		MOV AH, 00H  ; Configurar função AH=00H para inicializar o gerador de números aleatórios
@@ -3546,10 +3593,10 @@ Main  proc
 		MOV BL, AL   ; Mover o valor aleatório para BL
 		AND BL, 0001H ; Máscara para manter apenas o bit menos significativo
 
-		GOTO_XY		3,1
-		MOSTRA 		Jogador1
-		GOTO_XY		3,2
-		MOSTRA 		Jogador2
+		GOTO_XY		5,1
+		MOSTRA 		player1
+		GOTO_XY		5,2
+		MOSTRA 		player2
 
 		;A JOGAR
 		GOTO_XY		10,4
@@ -3585,11 +3632,44 @@ Main  proc
 		MOV AH, 02H
 		INT 21H
 
+        goto_xy	    3,1
+        mov         ah, 02h
+        mov         dl, '-'
+        int         21H
+
+        goto_xy	    3,2
+        mov         ah, 02h
+        mov         dl, '-'
+        int         21H
+
 		goto_xy		0,0
 		call		IMP_FICH
 
 		call 		AVATAR
 		goto_xy		0,22
+
+        FINAL proc
+            mov al, byte ptr [FinalWinner]
+		    cmp al, '1'
+            jne EMPATE
+
+            call		apaga_ecran
+            GOTO_XY		0,0
+            MOSTRA 		msgVencedor
+            GOTO_XY		50,8
+            MOSTRA 		msgVencedor2
+            goto_xy	    60,8
+            mov         ah, 02h
+            mov         dl, JogadorAtual
+            int         21H
+
+            EMPATE:
+            GOTO_XY		52,8
+            MOSTRA 		msgEmpate
+
+            goto_xy	    0,22
+
+        FINAL endp
 
 		mov			ah,4CH
 		INT			21H
