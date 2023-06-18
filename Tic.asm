@@ -2193,51 +2193,42 @@ MOSTRA_WINNER_1:
         INC SI
         LOOP LOOP_WINNER_1  ; Repita o loop até que CX seja igual a zero
 
-    ;DESATIVAR
-    MOV CX, 9  ; Defina o contador do loop para 9
-    MOV SI, offset array
-    MOV DI, 0  ; Inicializa o contador de posição como 0
+    DESATIVAR_1:
+        MOV CX, 9  ; Defina o contador do loop para 9
+        MOV SI, offset array
+        MOV DI, 0  ; Inicializa o contador de posição como 0
 
-    LOOP_DESATIVA_1:
-        MOV AL, [SI]
-        CMP AL, '-'
-        JNE PROXIMO_DESATIVA_1
+        LOOP_DESATIVA_1:
+            MOV AL, [SI]
+            CMP AL, '-'
+            JNE PROXIMO_DESATIVA_1
 
-        ; Exibir 0FFh na tela com base no índice do array
-        CMP DI, 0
-        JE DESATIVA_1_0
-        CMP DI, 1
-        JE DESATIVA_1_1
-        CMP DI, 2
-        JE DESATIVA_1_2
+            ; Exibir 0FFh na tela com base no índice do array
+            CMP DI, 0
+            JE DESATIVA_1_0
+            CMP DI, 1
+            JE DESATIVA_1_1
+            CMP DI, 2
+            JE DESATIVA_1_2
+            CMP DI, 3
+            JE DESATIVA_1_3
+            CMP DI, 4
+            JE DESATIVA_1_4
+            CMP DI, 5
+            JE DESATIVA_1_5
+            CMP DI, 6
+            JE DESATIVA_1_6
+            CMP DI, 7
+            JE DESATIVA_1_7
+            CMP DI, 8
+            JE DESATIVA_1_8
 
-        JMP PROXIMO_DESATIVA_1
-
-        DESATIVA_1_0:
-            goto_xy 4, 7
-            mov ah, 02h
-            mov dl, 0FFh
-            int 21H
             JMP PROXIMO_DESATIVA_1
 
-        DESATIVA_1_1:
-            goto_xy 6, 7
-            mov ah, 02h
-            mov dl, 0FFh
-            int 21H
-            JMP PROXIMO_DESATIVA_1
-
-        DESATIVA_1_2:
-            goto_xy 8, 7
-            mov ah, 02h
-            mov dl, 0FFh
-            int 21H
-            JMP PROXIMO_DESATIVA_1
-
-    PROXIMO_DESATIVA_1:
-        INC SI
-        INC DI
-        LOOP LOOP_DESATIVA_1  ; Repita o loop até que CX seja igual a zero
+        PROXIMO_DESATIVA_1:
+            INC SI
+            INC DI
+            LOOP LOOP_DESATIVA_1  ; Repita o loop até que CX seja igual a zero
 
 	;jmp CICLO
 	jmp WINNER_FINAL
@@ -2515,38 +2506,73 @@ MOSTRA_WINNER_FINAL:
 	jmp CICLO
 
 ;########################################################################
-;TESTE
+;DESATIVA OS TABULEIROS
 
-DESATIVA:
+;DESATIVA_TABULEIRO_1
+    DESATIVA_1_0:
+        goto_xy 4, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
 
-    ;mov al, byte ptr [boardWinner1] ; Carrega o valor de boardWinner1 em al
-	;cmp al, '1'
-    ;jne CICLO
+    DESATIVA_1_1:
+        goto_xy 6, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
 
+    DESATIVA_1_2:
+        goto_xy 8, 7
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
+    
+    ;linha 2
+    DESATIVA_1_3:
+        goto_xy 4, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
 
-    ;DESATIVA_BOARD_1:
-    ;MOV CX, 9  ; Defina o contador do loop para 9
-    ;MOV SI, offset array
-    ;LOOP_DESATIVA_1:
-    ;    MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
-    ;    CMP AL, 0FFh 
-    ;    JE DESATIVA_BOARD_2 
+    DESATIVA_1_4:
+        goto_xy 6, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
 
-    ;PROXIMO_D_1:
-    ;    INC SI
-    ;    LOOP LOOP_DESATIVA_1  ; Repita o loop até que CX seja igual a zero
+    DESATIVA_1_5:
+        goto_xy 8, 8
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
 
-    ;DESATIVA_BOARD_2:
-    ;MOV CX, 9  ; Defina o contador do loop para 9
-    ;MOV SI, offset array + 9
-    ;LOOP_DESATIVA_2:
-    ;    MOV AL, [SI] ; Carrega o valor da posição atual do array em AL
-    ;    CMP AL, 0FFh 
-    ;    JE CICLO 
+    ;linha 3
+    DESATIVA_1_6:
+        goto_xy 4, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
 
-    ;PROXIMO_D_2:
-    ;    INC SI
-    ;    LOOP LOOP_DESATIVA_2  ; Repita o loop até que CX seja igual a zero
+    DESATIVA_1_7:
+        goto_xy 6, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
+
+    DESATIVA_1_8:
+        goto_xy 8, 9
+        mov ah, 02h
+        mov dl, 0FFh
+        int 21H
+        JMP PROXIMO_DESATIVA_1
 
 ;########################################################################
 fim:				
