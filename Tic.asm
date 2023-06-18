@@ -46,7 +46,8 @@ dseg	segment para public 'data'
 		auxSimbolo		db	1
 		bool1Simbolo 	db 	0
 
-		array    		db  81 dup(?)   ; Array de 81 elementos
+		;array    		db  81 dup(?)   ; Array de 81 elementos
+		array 			db 	81 dup('N','A')
 
 		boardWinner1	db	0
 		
@@ -1462,17 +1463,18 @@ check_next80:
 ; FIM TABULEIRO 9
 
 end_coord:
-    jmp CICLO
-	;jmp WINNER
+	jmp WINNER
 
 ;########################################################################
 ;VERIFICA WINNER
 
 WINNER:
-	; carrega o endereço do array em SI
-	mov si, offset array
-
+	mov si, offset array ; carrega o endereço do array em SI
 	BOARD_1:
+		mov al, byte ptr [boardWinner1]
+		cmp al, '1'
+		je	not_winner
+
 		LINHAS:
 			; Verifica se as primeiras 3 posições são iguais
 			mov al, [si] ; carrega o primeiro caractere em AL
@@ -1497,36 +1499,28 @@ WINNER:
 			add si, 3 ; avança SI para a próxima posição
 			mov al, [si] ; carrega o sétimo caractere em AL
 			cmp al, [si+1] ; compara o sétimo caractere com o oitavo
-			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			jne not_winner ; pula para "not_winner" se forem diferentes
 			cmp al, [si+2] ; compara o sétimo caractere com o nono
-			jne LINHA_1_3 ; pula para "not_winner" se forem diferentes
+			jne not_winner ; pula para "not_winner" se forem diferentes
 			jmp	ganhouBoard1
-
-		; se chegou até aqui ganhou
-		ganhouBoard1:
-			mov boardWinner1, '1'
-			jmp MOSTRA_WINNER
-
-	;COLUNAS
-
-
-	;DIAGONAIS
-
 
 	not_winner:
 		jmp CICLO
+
+	ganhouBoard1:
+	mov byte ptr [boardWinner1], '1' ; Atualiza boardWinner1 para '1'
+	jmp MOSTRA_WINNER
 
 ;########################################################################
 ;VERIFICA WINNER
 
 MOSTRA_WINNER:
 
-	mov al, boardWinner1
-    cmp al, 49  ; Comparação corrigida para o código ASCII do caractere '1'
-    jne CICLO
-
-	;goto_xy	53,11
-	goto_xy	45,11
+	mov al, byte ptr [boardWinner1] ; Carrega o valor de boardWinner1 em al
+	cmp al, '1' ; Compara com o caractere '1'
+	jne CICLO
+	
+	goto_xy	53,11
 	mov ah, 02h
     mov dl, JogadorAtual
     int 21H
