@@ -58,6 +58,7 @@ dseg	segment para public 'data'
 		boardWinner7	db	0
 		boardWinner8	db	0
 		boardWinner9	db	0
+		FinalWinner		db	0
 
 dseg	ends
 
@@ -2174,7 +2175,8 @@ MOSTRA_WINNER_1:
     add si, 0   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 	
-	jmp CICLO
+	;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_2:
 
@@ -2193,7 +2195,8 @@ MOSTRA_WINNER_2:
     add si, 1   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 	
-	jmp CICLO
+	;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_3:
 
@@ -2212,7 +2215,8 @@ MOSTRA_WINNER_3:
     add si, 2   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
-	jmp CICLO
+	;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_4:
 
@@ -2231,7 +2235,8 @@ MOSTRA_WINNER_4:
     add si, 3   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 	
-	jmp CICLO
+	;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_5:
 
@@ -2250,7 +2255,8 @@ MOSTRA_WINNER_5:
     add si, 4   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
-    jmp CICLO
+    ;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_6:
 
@@ -2269,7 +2275,8 @@ MOSTRA_WINNER_6:
     add si, 5   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
-    jmp CICLO
+    ;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_7:
 
@@ -2288,7 +2295,8 @@ MOSTRA_WINNER_7:
     add si, 6   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
-    jmp CICLO
+    ;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_8:
 
@@ -2307,7 +2315,8 @@ MOSTRA_WINNER_8:
     add si, 7   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
-    jmp CICLO
+    ;jmp CICLO
+	jmp WINNER_FINAL
 
 MOSTRA_WINNER_9:
 
@@ -2326,15 +2335,105 @@ MOSTRA_WINNER_9:
     add si, 8   ; Acesso ao elemento 1 do array
     mov [si], al  ; Armazena jogadorAtual no elemento 1 do array
 
-    jmp CICLO
+    ;jmp CICLO
+	jmp WINNER_FINAL
 ;########################################################################
 ;VERIFICA WINNER FINAL
 
+WINNER_FINAL:
 
+	mov si, offset arrayFinal ; carrega o endereço do array em SI
+	
+	BOARD_FINAL:
+		mov al, byte ptr [FinalWinner]
+		cmp al, '1'
+		je	CICLO
 
+		LINHAS_FINAL:
+			mov al, [si] ; carrega o primeiro caractere em AL
+			cmp al, [si+1] ; compara o primeiro caractere com o segundo
+			jne LINHA_FINAL_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+2] ; compara o primeiro caractere com o terceiro
+			jne LINHA_FINAL_2 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+			LINHA_FINAL_2:
+			mov al, [si+3] ; carrega o quarto caractere em AL
+			cmp al, [si+4] ; compara o quarto caractere com o quinto
+			jne LINHA_FINAL_3 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+5] ; compara o quarto caractere com o sexto
+			jne LINHA_FINAL_3 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+			LINHA_FINAL_3:
+			mov al, [si+6] ; carrega o sétimo caractere em AL
+			cmp al, [si+7] ; compara o sétimo caractere com o oitavo
+			jne COLUNAS_FINAL ; pula para "not_winner" se forem diferentes
+			cmp al, [si+8] ; compara o sétimo caractere com o nono
+			jne COLUNAS_FINAL ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+		COLUNAS_FINAL:
+			mov al, [si] ; carrega o primeiro caractere em AL
+			cmp al, [si+3] ; compara o primeiro caractere com o segundo
+			jne COLUNA_FINAL_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+6] ; compara o primeiro caractere com o terceiro
+			jne COLUNA_FINAL_2 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+			COLUNA_FINAL_2:
+			mov al, [si+1] ; carrega o quarto caractere em AL
+			cmp al, [si+4] ; compara o quarto caractere com o quinto
+			jne COLUNA_FINAL_3 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+7] ; compara o quarto caractere com o sexto
+			jne COLUNA_FINAL_3 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+			COLUNA_FINAL_3:
+			mov al, [si+3] ; carrega o sétimo caractere em AL
+			cmp al, [si+5] ; compara o sétimo caractere com o oitavo
+			jne DIAGONAIS_FINAL ; pula para "not_winner" se forem diferentes
+			cmp al, [si+8] ; compara o sétimo caractere com o nono
+			jne DIAGONAIS_FINAL ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+		DIAGONAIS_FINAL:
+			mov al, [si] ; carrega o primeiro caractere em AL
+			cmp al, [si+4] ; compara o primeiro caractere com o segundo
+			jne DIAGONAL_FINAL_2 ; pula para "not_winner" se forem diferentes
+			cmp al, [si+8] ; compara o primeiro caractere com o terceiro
+			jne DIAGONAL_FINAL_2 ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+			DIAGONAL_FINAL_2:
+			mov al, [si+2] ; carrega o quarto caractere em AL
+			cmp al, [si+4] ; compara o quarto caractere com o quinto
+			jne CICLO ; pula para "not_winner" se forem diferentes
+			cmp al, [si+6] ; compara o quarto caractere com o sexto
+			jne CICLO ; pula para "not_winner" se forem diferentes
+			jmp	ganhouBoardFinal
+
+	ganhouBoardFinal:
+	mov byte ptr [FinalWinner], '1' ; Atualiza boardWinner1 para '1'
+	jmp MOSTRA_WINNER_FINAL
 
 ;########################################################################
-;MOSTRA WINNERS
+;MOSTRA WINNER FINAL
+
+MOSTRA_WINNER_FINAL:
+
+	mov al, byte ptr [FinalWinner] ; Carrega o valor de boardWinner1 em al
+	cmp al, '1' ; Compara com o caractere '1'
+	jne CICLO
+	
+	goto_xy	70,12
+	mov ah, 02h
+    mov dl, JogadorAtual
+    int 21H
+	
+	jmp CICLO
+
+;########################################################################
 
 fim:				
 			RET
